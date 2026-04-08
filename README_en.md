@@ -8,4 +8,4 @@ The free quota in VS Code Copilot is limited. This extension lets you add custom
 - It currently supports only third-party model services that are compatible with the OpenAI Chat Completions protocol.
 - After enabling `Use for Git Commit Message`, the commit message generation button will offer two options: Copilot and the model provided by this extension.
 
-![English UI Preview](media/image_en.png)
+![English UI Preview](https://raw.githubusercontent.com/TangTangH/vscode-copilot-model-provider/main/media/image_en.png)

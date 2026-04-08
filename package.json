@@ -2,10 +2,15 @@
   "name": "vscode-copilot-models-provider",
   "displayName": "Vscode Copilot Models Provider",
   "description": "Add OpenAI-compatible third-party chat models to the VSCode Copilot model picker.",
-  "version": "0.0.20",
+  "version": "0.0.24",
   "publisher": "JTOFJSJ",
   "license": "MIT",
+  "icon": "media/icon.png",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TangTangH/vscode-copilot-model-provider"
+  },
   "enabledApiProposals": [
     "chatProvider",
     "contribSourceControlInputBoxMenu"

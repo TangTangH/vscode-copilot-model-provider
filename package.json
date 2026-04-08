@@ -1,0 +1,184 @@
+{
+  "name": "vscode-copilot-models-provider",
+  "displayName": "Vscode Copilot Models Provider",
+  "description": "Add OpenAI-compatible third-party chat models to the VSCode Copilot model picker.",
+  "version": "0.0.20",
+  "publisher": "JTOFJSJ",
+  "license": "MIT",
+  "private": true,
+  "enabledApiProposals": [
+    "chatProvider",
+    "contribSourceControlInputBoxMenu"
+  ],
+  "engines": {
+    "vscode": "^1.106.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "customModels.manage",
+        "title": "Custom Models: Manage Models",
+        "category": "Custom Models"
+      },
+      {
+        "command": "customModels.generateGitCommitMessage",
+        "title": "Generate Commit Message with Custom Model",
+        "category": "Git",
+        "icon": "$(sparkle)"
+      }
+    ],
+    "menus": {
+      "scm/inputBox": [
+        {
+          "command": "customModels.generateGitCommitMessage",
+          "when": "scmProvider == git"
+        }
+      ]
+    },
+    "languageModelChatProviders": [
+      {
+        "vendor": "custom-models",
+        "displayName": "Custom Models"
+      }
+    ],
+    "configuration": {
+      "title": "Custom Models Provider",
+      "properties": {
+        "customModels.models": {
+          "type": "array",
+          "scope": "application",
+          "default": [],
+          "description": "List of custom OpenAI-compatible chat models shown in the VS Code model picker. API keys are stored separately via the 'Custom Models: Manage Models' command.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique local identifier for this model configuration."
+              },
+              "name": {
+                "type": "string",
+                "description": "Display name shown in the model picker."
+              },
+              "model": {
+                "type": "string",
+                "description": "Upstream model identifier sent in the OpenAI-compatible request body."
+              },
+              "providerLabel": {
+                "type": "string",
+                "description": "Optional detail label shown next to the model."
+              },
+              "baseUrl": {
+                "type": "string",
+                "description": "Provider base URL or a full chat completions endpoint URL."
+              },
+              "apiPath": {
+                "type": "string",
+                "description": "Optional path appended to baseUrl. Leave empty for automatic '/v1/chat/completions' resolution."
+              },
+              "authMode": {
+                "type": "string",
+                "default": "bearer",
+                "enum": [
+                  "bearer",
+                  "header",
+                  "none"
+                ],
+                "description": "How the stored API key should be sent. 'bearer' uses Authorization: Bearer <key>, 'header' uses the configured header name, and 'none' sends no API key."
+              },
+              "apiKeyHeaderName": {
+                "type": "string",
+                "default": "x-api-key",
+                "description": "Header name used when authMode is 'header'."
+              },
+              "toolCalling": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether the model supports tool calling."
+              },
+              "vision": {
+                "type": "boolean",
+                "default": false,
+                "description": "Whether the model accepts image input."
+              },
+              "useForGitCommitMessage": {
+                "type": "boolean",
+                "default": false,
+                "description": "Whether this model should be used for Git commit message generation. Only one model can enable this at a time."
+              },
+              "maxInputTokens": {
+                "type": "number",
+                "default": 128000,
+                "description": "Maximum input token budget reported to VS Code."
+              },
+              "maxOutputTokens": {
+                "type": "number",
+                "default": 8192,
+                "description": "Maximum output token budget reported to VS Code."
+              },
+              "requestHeaders": {
+                "type": "object",
+                "description": "Additional static request headers sent with every request.",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "showInModelPicker": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether the model should be shown in the picker."
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "model",
+              "baseUrl",
+              "toolCalling",
+              "vision",
+              "maxInputTokens",
+              "maxOutputTokens"
+            ]
+          }
+        },
+        "customModels.requestTimeoutSeconds": {
+          "type": "number",
+          "scope": "application",
+          "default": 300,
+          "minimum": 5,
+          "description": "Network timeout in seconds for custom model requests."
+        },
+        "customModels.gitCommitMessage.systemPrompt": {
+          "type": "string",
+          "scope": "application",
+          "default": "",
+          "editPresentation": "multilineText",
+          "description": "Optional system prompt override for Git commit message generation. Leave empty to use the built-in localized prompt."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./ && node ./scripts/build-webview.js",
+    "package:patch": "node ./scripts/package-patch.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.32",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/vscode": "1.106.0",
+    "antd": "^6.3.5",
+    "esbuild": "^0.28.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "typescript": "^5.8.3"
+  }
+}
